@@ -1,0 +1,91 @@
+---
+title: "Join Lab"
+author: "Dr. Shoemaker"
+date: "DATA 2401"
+output: html_document
+---
+
+
+# Joins and `dplyr` practice
+
+Load the `"nycflights13"` package.  You'll also need to load `dplyr` or `tidyverse`, if you didn't above.
+
+```{r}
+library(tidyverse)
+#install.packages("nycflights13")
+library(nycflights13)
+my_flights <- flights # store my own version
+my_flights <- na.omit(my_flights) ## this dataset has data on cancelled flights too, 
+                                  ## so we 'll remove those for now
+
+```
+
+
+Create a dataframe of the average arrival delays for each _destination_
+
+```{r}
+
+```
+
+Then use `left_join()` to join on the "airports" dataframe, which has the airport information.
+
+```{r}
+
+```
+
+
+Note here: the column names don't match anymore! 
+
+Which airport had the largest average arrival delay?
+
+```{r}
+
+```
+
+```{r}
+
+
+```
+
+
+---
+
+Which airline had the smallest average departure delay?
+
+To answer this, you need to create a dataframe of the average departure delay for each _airline_, then use `left_join()` to join on the "airlines" dataframe
+
+ - Create a dataframe of the average departure delay for each _airline_
+ - use `left_join()` to join on the "airlines" dataframe
+ - use slice_???() to find the result you need
+
+
+
+
+```{r}
+
+
+
+```
+
+
+Examples from R4DS:    
+
+```{r}
+
+top_dest <- flights %>%
+  count(dest, sort = TRUE) %>%
+  head(10)
+top_dest
+
+```
+
+Now you want to find each flight that went to one of those destinations. You could, of course, filter. But! Now you can semi-join: 
+
+```{r}
+flights %>% 
+  semi_join(top_dest)
+```
+
+
+What does anti_join(flights, airports, by = c("dest" = "faa")) tell you? What does anti_join(airports, flights, by = c("faa" = "dest")) tell you?
+
