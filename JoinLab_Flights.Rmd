@@ -1,6 +1,6 @@
 ---
 title: "Join Lab"
-author: "Dr. Shoemaker"
+author: "Shikyna William"
 date: "DATA 2401"
 output: html_document
 ---
@@ -17,20 +17,24 @@ library(nycflights13)
 my_flights <- flights # store my own version
 my_flights <- na.omit(my_flights) ## this dataset has data on cancelled flights too, 
                                   ## so we 'll remove those for now
-
+my_flights
 ```
 
 
 Create a dataframe of the average arrival delays for each _destination_
 
 ```{r}
-
+avg_arrival_delay <- my_flights %>%
+  group_by(dest) %>% 
+  summarise(avg_arriv_delay = mean(arr_delay))
+avg_arrival_delay
 ```
 
 Then use `left_join()` to join on the "airports" dataframe, which has the airport information.
 
 ```{r}
-
+avg_arrival_delay <- left_join(avg_arrival_delay, airports, join_by(dest == faa))
+airports
 ```
 
 
@@ -39,27 +43,34 @@ Note here: the column names don't match anymore!
 Which airport had the largest average arrival delay?
 
 ```{r}
+avg_arrival_delay %>% slice_max(avg_arriv_delay, n=10) %>% select(dest, avg_arriv_delay)
+avg_arrival_delay
 
+#Or
+avg_arrival_delay %>% arrange(-avg_arriv_delay) %>% slice_max(avg_arriv_delay) %>% select(dest, avg_arriv_delay)
 ```
 
 
 
-What is the average departure delay for each airline? To answer this with something more than just the FAA code of the airline name, you need to create a dataframe of the average departure delay for each _airline_, then use `left_join()` to join on the "airlines" dataframe
+What is the average departure delay for each airline? To answer this with something more than just the FAA code of the airline name, you need to create a dataframe of the average departure delay for each _airline_, then use `left_join()` to join on the "airlines" dataframe.
 
 
 ```{r}
-
-
-````
+my_flights
+airlines
+avg_dep_del <- my_flights %>%
+  group_by(carrier) %>% 
+  summarise(avg_dep_del = mean(dep_delay)) %>% 
+  left_join(airlines)
+avg_dep_del
+```
 
 Which airline had the smallest average departure delay? 
 
 
 
 ```{r}
-
-
-
+avg_dep_del %>% slice_min(avg_dep_del)
 ```
 
 
